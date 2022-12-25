@@ -3,18 +3,21 @@ package com.example.productivepomodoro;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Interpolator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+
     private BottomNavigationView bottomNav;
     private Pomodoro pomodoroFragment;
     private TodoList todoFragment;
@@ -32,14 +35,12 @@ public class MainActivity extends AppCompatActivity {
         profileFragment = new UserProfile();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, pomodoroFragment).commit();
-
     }
 
     private NavigationBarView.OnItemSelectedListener navListener = new NavigationBarView.OnItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedPage = null;
-
             switch (item.getItemId()){
                 case (R.id.nav_timer):
                     selectedPage = pomodoroFragment;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
             View menuItemView = findViewById(item.getItemId());
-            YoYo.with(Techniques.StandUp).duration(500).playOn(menuItemView);
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, selectedPage).commit();
             return true;
         }
