@@ -1,4 +1,4 @@
-package com.example.productivepomodoro;
+package com.example.productivepomodoro.Timer;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.example.productivepomodoro.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -64,7 +65,7 @@ public class Pomodoro extends Fragment {
     };
     private TimerState currentState;
 
-    Pomodoro(){
+    public Pomodoro(){
         focusTimerMilliseconds = focusTimerMinutes * 60 * countDownInterval;
         breakTimerMilliseconds = breakTimerMinutes * 60 * countDownInterval;
         longBreakTimerMilliseconds = longBreakTimerMinutes * 60 * countDownInterval;

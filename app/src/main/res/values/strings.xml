@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Productive Pomodoro</string>
+    <string name="strike"> <strike>  No Tasks Remaining  </strike> </string>
+    <string-array name="sort_arr">
+        <item>By Date</item>
+        <item>By Due</item>
+        <item>By Name</item>
+        <item>By Priority</item>
+    </string-array>
 </resources>

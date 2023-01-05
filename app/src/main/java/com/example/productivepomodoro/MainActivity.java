@@ -2,25 +2,23 @@ package com.example.productivepomodoro;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.example.productivepomodoro.Timer.Pomodoro;
+import com.example.productivepomodoro.Todo.TodoParent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNav;
     private Pomodoro pomodoroFragment;
-    private TodoList todoFragment;
+    private TodoParent todoFragment;
     private UserProfile profileFragment;
 
     @Override
@@ -31,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(navListener);
 
         pomodoroFragment = new Pomodoro();
-        todoFragment = new TodoList();
+        todoFragment = new TodoParent();
         profileFragment = new UserProfile();
+
+        YoYo.with(Techniques.BounceInUp).duration(700).playOn(bottomNav);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, pomodoroFragment).commit();
     }
@@ -52,15 +52,17 @@ public class MainActivity extends AppCompatActivity {
                     selectedPage = profileFragment;
                     break;
             }
-            View menuItemView = findViewById(item.getItemId());
+
+            clearSearchQuery();
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, selectedPage).commit();
             return true;
         }
     };
-    private NavigationBarView.OnItemReselectedListener navReselectListener = new NavigationBarView.OnItemReselectedListener() {
-        @Override
-        public void onNavigationItemReselected(@NonNull MenuItem item) {
-            YoYo.with(Techniques.StandUp).duration(500).playOn(findViewById(item.getItemId()));
+
+    private void clearSearchQuery(){
+        if(todoFragment.getTodoList(true) != null && todoFragment.getTodoList(false) != null){
+            todoFragment.getTodoList(true).clearSearch();
+            todoFragment.getTodoList(false).clearSearch();
         }
-    };
+    }
 }

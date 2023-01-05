@@ -2,16 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="12dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="12dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/teal_200"
+        app:cardBackgroundColor="#03A9F4"
         app:cardCornerRadius="18dp"
-        app:cardElevation="8dp"
+        app:cardElevation="@dimen/cardview_default_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,12 +31,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <CheckBox
-                    android:id="@+id/checkBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#000000" />
-
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/rowDeleteButton"
                     android:layout_width="wrap_content"
@@ -43,7 +38,7 @@
                     android:clickable="true"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    app:backgroundTint="@color/fab_task_color"
+                    app:backgroundTint="#82C8FF"
                     app:srcCompat="@drawable/ic_baseline_delete_24" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,7 +48,7 @@
                     android:clickable="true"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    app:backgroundTint="@color/fab_task_color"
+                    app:backgroundTint="#82C8FF"
                     app:srcCompat="@drawable/ic_baseline_edit_24" />
             </LinearLayout>
 
@@ -83,6 +78,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/noteParentConstraintLayout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -90,20 +86,34 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mainTask">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="12dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                    </androidx.recyclerview.widget.RecyclerView>
+                    <TextView
+                        android:id="@+id/editTextTextMultiLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="Add Notes"
+                        android:inputType="textMultiLine"
+                        android:padding="8dp"
+                        android:scrollbars="vertical"
+                        android:textSize="14sp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/completedCheckImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_check_circle_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
