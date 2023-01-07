@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +28,6 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     ArrayList<TodoModel> todoModelsFull;
     static TodoList todoList;
 
-    private TodoModel deletedModelInStack;
-
     public TodoRecyclerViewAdapter(Context context, ArrayList<TodoModel> todoModels, TodoList todoList){
         this.context = context;
         this.todoModels = todoModels;
@@ -39,6 +38,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
     @NonNull
     @Override
     public TodoRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        todoList.clearSearch();
         this.todoModelsFull = new ArrayList<>(todoModels);
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -52,14 +52,14 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         TodoModel todoModel = todoModels.get(position);
         holder.mainTaskName.setText(todoModel.getMainTaskName());
         holder.taskNotes.setText(todoModel.getTasksNote());
+        holder.priorityRating.setRating(todoModel.getTaskPriority() + 1);
+
         if(todoModel.getTaskChecked()){
             holder.mainTaskName.setPaintFlags(holder.mainTaskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
             holder.deleteButton.setEnabled(false);
             holder.editButton.setEnabled(false);
             holder.deleteButton.setVisibility(View.INVISIBLE);
             holder.editButton.setVisibility(View.INVISIBLE);
-
             holder.taskNotes.setPaintFlags(holder.taskNotes.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.taskNotes.setFocusable(false);
             holder.checkImage.setVisibility(View.VISIBLE);
@@ -82,6 +82,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         FloatingActionButton editButton;
         ImageView checkImage;
         TextView taskNotes;
+        RatingBar priorityRating;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +91,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             editButton = itemView.findViewById(R.id.rowEditButton);
             taskNotes = itemView.findViewById(R.id.editTextTextMultiLine);
             checkImage = itemView.findViewById(R.id.completedCheckImage);
+            priorityRating = itemView.findViewById(R.id.priorityRating);
 
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,4 +142,8 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             notifyDataSetChanged();
         }
     };
+
+    public ArrayList<TodoModel> getTodoModelsFull(){
+        return todoModelsFull;
+    }
 }

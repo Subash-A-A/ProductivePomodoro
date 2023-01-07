@@ -28,6 +28,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -36,8 +37,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75"
+                    android:scaleX="0.65"
+                    android:scaleY="0.65"
                     app:backgroundTint="#82C8FF"
                     app:srcCompat="@drawable/ic_baseline_delete_24" />
 
@@ -46,16 +47,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75"
+                    android:scaleX="0.65"
+                    android:scaleY="0.65"
                     app:backgroundTint="#82C8FF"
                     app:srcCompat="@drawable/ic_baseline_edit_24" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="#3CC2FF"
+                android:background="#64CFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -65,22 +67,38 @@
                     android:id="@+id/mainTask"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#5BFFFFFF"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/timer_font2"
+                    android:maxLines="1"
                     android:text="Task 1"
-                    android:textAlignment="center"
+                    android:textAlignment="viewStart"
                     android:textAllCaps="true"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintEnd_toStartOf="@+id/priorityRating"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RatingBar
+                    android:id="@+id/priorityRating"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:max="5"
+                    android:progressTint="#157ED2"
+                    android:rating="3"
+                    app:layout_constraintBottom_toBottomOf="@+id/mainTask"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/noteParentConstraintLayout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:background="#4DFFFFFF"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -89,14 +107,18 @@
                     <TextView
                         android:id="@+id/editTextTextMultiLine"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:ems="10"
                         android:gravity="start|top"
                         android:hint="Add Notes"
                         android:inputType="textMultiLine"
                         android:padding="8dp"
                         android:scrollbars="vertical"
-                        android:textSize="14sp" />
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -117,4 +139,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

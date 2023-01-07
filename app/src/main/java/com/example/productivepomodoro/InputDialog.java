@@ -2,30 +2,37 @@ package com.example.productivepomodoro;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.productivepomodoro.Todo.TodoList;
 import com.example.productivepomodoro.Todo.TodoModel;
 
 public class InputDialog extends AppCompatDialogFragment {
     private EditText editTextTask;
     private EditText editTextNote;
+    private SeekBar prioritySeekBar;
+    private TextView priorityDisplay;
+
     private TodoList todoList;
     private boolean isEditingTask = false;
 
     private TextView taskName;
     private TextView taskNote;
     private int position;
+
+    String[] priorityNames = {"Very Low", "Low", "Normal", "High", "Very High"};
 
     public InputDialog(TodoList todoList, boolean isEditingTask){
         this.todoList = todoList;
@@ -49,8 +56,12 @@ public class InputDialog extends AppCompatDialogFragment {
 
         editTextTask = view.findViewById(R.id.taskInput);
         editTextNote = view.findViewById(R.id.noteInput);
+        prioritySeekBar = view.findViewById(R.id.prioritySeekBar);
+        priorityDisplay = view.findViewById(R.id.priorityText);
 
-        if(isEditingTask) setText();
+        prioritySeekBar.setOnSeekBarChangeListener(listener);
+
+        if(isEditingTask) fillInputFields();
 
         builder.setView(view)
                 .setTitle(isEditingTask ? "Edit Task" : "Add Task")
@@ -74,18 +85,39 @@ public class InputDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
+    SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            priorityDisplay.setText(priorityNames[i]);
+            YoYo.with(Techniques.RubberBand).duration(200).playOn(priorityDisplay);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+
     private void addTask(){
         String taskName = editTextTask.getText().toString();
         String taskNote = editTextNote.getText().toString();
-        todoList.addTask(taskName, taskNote);
+        int priority = prioritySeekBar.getProgress();
+
+        todoList.addTask(taskName, taskNote, priority);
     }
     private void editTask(){
         String taskNameStr = editTextTask.getText().toString();
         String taskNoteStr = editTextNote.getText().toString();
+        int priority = prioritySeekBar.getProgress();
 
-        todoList.replaceTodo(position, new TodoModel(taskNameStr, taskNoteStr, false));
+        todoList.replaceTodo(position, new TodoModel(taskNameStr, taskNoteStr, false, priority));
     }
-    private void setText(){
+    private void fillInputFields(){
         editTextTask.setText(taskName.getText());
         editTextNote.setText(taskNote.getText());
     }

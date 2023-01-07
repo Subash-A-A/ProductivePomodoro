@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,13 +17,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class TodoParent extends Fragment {
-
-    private TabLayout tabLayout;
-    private FrameLayout frameLayout;
-
     Fragment fragmentToBeDisplayed;
     TodoList todoListOngoing;
     TodoList todoListCompleted;
@@ -32,9 +26,7 @@ public class TodoParent extends Fragment {
     ArrayList<TodoModel> onGoingList;
     ArrayList<TodoModel> completedList;
 
-    public boolean canSwitchTabs = true;
-
-    public enum TodoCategory{ONGOING, COMPLETED};
+    public enum TodoCategory{ONGOING, COMPLETED}
 
     public TodoParent(){
         onGoingList = new ArrayList<>();
@@ -57,8 +49,8 @@ public class TodoParent extends Fragment {
 
         FloatingActionButton addTaskButton = todoMainView.findViewById(R.id.addTaskButton);
 
-        tabLayout = todoMainView.findViewById(R.id.todoTabLayout);
-        frameLayout = todoMainView.findViewById(R.id.todoMainFrame);
+        TabLayout tabLayout = todoMainView.findViewById(R.id.todoTabLayout);
+//        FrameLayout frameLayout = todoMainView.findViewById(R.id.todoMainFrame);
 
         YoYo.with(Techniques.BounceInDown).duration(700).playOn(tabLayout);
         YoYo.with(Techniques.BounceInUp).duration(500).playOn(addTaskButton);
@@ -69,12 +61,14 @@ public class TodoParent extends Fragment {
                 switch (tab.getPosition()){
                     case 0:
                         todoListOngoing.clearSearch();
+
                         fragmentToBeDisplayed = todoListOngoing;
                         YoYo.with(Techniques.BounceInUp).duration(500).playOn(addTaskButton);
                         addTaskButton.setEnabled(true);
                         break;
                     case 1:
-                        todoListOngoing.clearSearch();
+                        todoListCompleted.clearSearch();
+
                         fragmentToBeDisplayed = todoListCompleted;
                         addTaskButton.setEnabled(false);
                         YoYo.with(Techniques.SlideOutDown).duration(200).playOn(addTaskButton);
@@ -95,12 +89,7 @@ public class TodoParent extends Fragment {
             }
         });
 
-        addTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialogue();
-            }
-        });
+        addTaskButton.setOnClickListener(view -> openDialogue());
 
         return todoMainView;
     }
@@ -110,7 +99,7 @@ public class TodoParent extends Fragment {
     }
 
     private void replaceTodoFragments(){
-        getActivity()
+        requireActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.todoMainFrame, fragmentToBeDisplayed)
@@ -120,22 +109,21 @@ public class TodoParent extends Fragment {
     public void markAsCompleted(int onGoingPosition, TodoModel todoModel){
         String taskName = todoModel.getMainTaskName();
         String taskNote = todoModel.getTasksNote();
+        int priority = todoModel.getTaskPriority();
         boolean checked = true;
 
-        todoListCompleted.addTaskToList(new TodoModel(taskName, taskNote, checked));
+        todoListCompleted.addTaskToList(new TodoModel(taskName, taskNote, checked, priority));
         todoListOngoing.removeFromList(onGoingPosition);
     }
 
     public void markAsOngoing(int completedPosition, TodoModel todoModel){
         String taskName = todoModel.getMainTaskName();
         String taskNote = todoModel.getTasksNote();
+        int priority = todoModel.getTaskPriority();
         boolean checked = false;
 
-        todoListOngoing.addTaskToList(new TodoModel(taskName, taskNote, checked));
+        todoListOngoing.addTaskToList(new TodoModel(taskName, taskNote, checked, priority));
         todoListCompleted.removeFromList(completedPosition);
-    }
-    public TabLayout getTabLayout(){
-        return tabLayout;
     }
 
     public TodoList getTodoList(boolean getOngoing){

@@ -1,5 +1,6 @@
 package com.example.productivepomodoro.Todo;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +22,11 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.productivepomodoro.R;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class TodoList extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -39,8 +42,6 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
 
     private int spinnerSelection;
     private TodoModel deletedModelInStack;
-
-    private boolean tabShown = true;
 
     TodoList(ArrayList<TodoModel> todoModels, TodoParent todoParent, TodoParent.TodoCategory category){
         this.todoModels = todoModels;
@@ -87,15 +88,6 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                TabLayout tabLayout = todoParent.getTabLayout();
-                if(newText.equals("")){
-//                    tabLayout.setVisibility(View.VISIBLE);
-
-                } else{
-                    todoParent.canSwitchTabs = false;
-//                    tabLayout.setVisibility(View.INVISIBLE);
-                }
-
                 adapter.getFilter().filter(newText);
                 return false;
             }
@@ -138,8 +130,8 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
         }
     };
 
-    public void addTask(String taskName, String taskNote){
-        TodoModel newModel = new TodoModel(taskName, taskNote, false);
+    public void addTask(String taskName, String taskNote, int priority){
+        TodoModel newModel = new TodoModel(taskName, taskNote, false, priority);
         todoModels.add(0, newModel);
         adapter.notifyItemInserted(0);
     }
@@ -153,30 +145,53 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
     public void undoSnackBar(String message, int viewPosition){
         Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG)
                 .setAction("Undo", view -> {
-                    todoModels.add(viewPosition, deletedModelInStack);
-                    adapter.notifyItemInserted(viewPosition);
+                    addTaskToList(deletedModelInStack, viewPosition);
                 }).show();
     }
 
     public void addTaskToList(TodoModel todoModel){
         todoModels.add(0, todoModel);
         adapter.notifyItemInserted(0);
+
+        adapter.getTodoModelsFull().add(0, todoModel);
+    }
+    public void addTaskToList(TodoModel todoModel, int position){
+        todoModels.add(position, todoModel);
+        adapter.notifyItemInserted(position);
+
+        adapter.getTodoModelsFull().add(position, todoModel);
     }
 
     public void removeFromList(int position){
+        TodoModel todoToBeRemoved = todoModels.get(position);
+
         todoModels.remove(position);
         adapter.notifyItemRemoved(position);
+
+        adapter.getTodoModelsFull().remove(todoToBeRemoved);
     }
     public void replaceTodo(int position, TodoModel model){
-        todoModels.remove(position);
-        adapter.notifyItemRemoved(position);
-        todoModels.add(position, model);
-        adapter.notifyItemInserted(position);
+        removeFromList(position);
+        addTaskToList(model, position);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
         spinnerSelection = pos;
+        switch (pos){
+            case 2:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    todoModels.sort(new SortByName());
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case 3:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    todoModels.sort(new SortByPriority());
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+        }
     }
 
     @Override
@@ -184,8 +199,23 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
     }
 
     public void clearSearch(){
-        searchView.setQuery("", false);
-        searchView.clearFocus();
-        searchView.setIconified(true);
+        if(!searchView.getQuery().toString().equals("")){
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+        }
+    }
+    static class SortByName implements Comparator<TodoModel> {
+        @Override
+        public int compare(TodoModel t1, TodoModel t2) {
+            String name1 = t1.getMainTaskName().trim().toLowerCase();
+            String name2 = t2.getMainTaskName().trim().toLowerCase();
+            return name1.compareTo(name2);
+        }
+    }
+    static class SortByPriority implements Comparator<TodoModel> {
+        @Override
+        public int compare(TodoModel t1, TodoModel t2) {
+            return t2.getTaskPriority() - t1.getTaskPriority();
+        }
     }
 }
