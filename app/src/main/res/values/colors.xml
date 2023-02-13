@@ -11,4 +11,12 @@
     <color name="primary_dark_nav_bg">#222831</color>
     <color name="selected">#FFFFFF</color>
     <color name="icon_unchecked">#646464</color>
+    
+    <array name="priority">
+        <item>#FF2E63</item>
+        <item>#FF772E</item>
+        <item>#FFC107</item>
+        <item>#78B800</item>
+        <item>#00B8A9</item>
+    </array>
 </resources>

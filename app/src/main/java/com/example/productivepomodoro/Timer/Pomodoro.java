@@ -3,12 +3,15 @@ package com.example.productivepomodoro.Timer;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.example.productivepomodoro.PomodoroInputDialog;
 import com.example.productivepomodoro.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +40,7 @@ public class Pomodoro extends Fragment {
     private FloatingActionButton timerControlButton;
     private FloatingActionButton skipButton;
     private FloatingActionButton restButton;
+    private ImageButton settingsButton;
     private CountDownTimer countDownTimer;
     private ProgressBar spinner;
     private TextView timerStateText;
@@ -87,6 +92,7 @@ public class Pomodoro extends Fragment {
         spinner = pomodoroView.findViewById(R.id.spinner);
         skipButton = pomodoroView.findViewById(R.id.skipButton);
         restButton = pomodoroView.findViewById(R.id.resetButton);
+        settingsButton = pomodoroView.findViewById(R.id.pomodoroSettings);
         timerStateText = pomodoroView.findViewById(R.id.timerStateText);
         pomodoroCountText = pomodoroView.findViewById(R.id.focusSetsCompletedCount);
 
@@ -95,6 +101,7 @@ public class Pomodoro extends Fragment {
         timerControlButton.setOnClickListener(view -> startStop());
         skipButton.setOnClickListener(view -> skipToNext());
         restButton.setOnClickListener(view -> resetTimer(false));
+        settingsButton.setOnClickListener(view -> openSettingsDialog());
 
         setTimer(false);
         setTimerStateText();
@@ -102,6 +109,12 @@ public class Pomodoro extends Fragment {
 
         return pomodoroView;
     }
+
+    private void openSettingsDialog(){
+        Toast.makeText(getContext(), "Settings Opened!", Toast.LENGTH_SHORT).show();
+        PomodoroInputDialog dialog = new PomodoroInputDialog(this);
+    }
+
     public void startStop(){
         if(resetTimer){
             resetTimer(true);
@@ -130,14 +143,16 @@ public class Pomodoro extends Fragment {
         }.start();
 
         timerRunning = true;
+        Log.w("Pomodoro", "Timer Started!");
         pomodoroButtonState();
     }
 
     public void pauseTimer(){
         countDownTimer.cancel();
         timerRunning = false;
-
+        Log.w("Pomodoro", "Timer Paused!");
         pomodoroButtonState();
+
     }
 
     public void pomodoroButtonState(){
@@ -166,6 +181,7 @@ public class Pomodoro extends Fragment {
 
     public void resetTimer(boolean goToNextState) {
         resetTimer = false;
+        Log.w("Pomodoro", "Timer Reset Successful!");
         timerControlButton.setImageResource(ButtonIcons.PLAY.i);
 
         if (goToNextState) {
@@ -201,6 +217,7 @@ public class Pomodoro extends Fragment {
         timerControlButton.setImageResource(ButtonIcons.PLAY.i);
         // If timer ends and user taps skip btn, count will increase
         setTimerToNextState(resetTimer);
+        Log.w("Pomodoro", "Skipped to next state!");
         resetTimer = false;
     }
 

@@ -7,7 +7,7 @@
     android:padding="12dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/todoCardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#03A9F4"
@@ -26,6 +26,7 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="#19BDECFF"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
@@ -39,7 +40,8 @@
                     android:clickable="true"
                     android:scaleX="0.65"
                     android:scaleY="0.65"
-                    app:backgroundTint="#82C8FF"
+                    app:backgroundTint="#80FFFFFF"
+                    app:elevation="0dp"
                     app:srcCompat="@drawable/ic_baseline_delete_24" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -49,7 +51,8 @@
                     android:clickable="true"
                     android:scaleX="0.65"
                     android:scaleY="0.65"
-                    app:backgroundTint="#82C8FF"
+                    app:backgroundTint="#80FFFFFF"
+                    app:elevation="0dp"
                     app:srcCompat="@drawable/ic_baseline_edit_24" />
             </LinearLayout>
 
@@ -57,7 +60,7 @@
                 android:id="@+id/constraintLayout3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="#64CFFF"
+                android:background="#66FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -68,7 +71,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="2dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/timer_font2"
                     android:maxLines="1"
@@ -77,20 +79,20 @@
                     android:textAllCaps="true"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/priorityRating"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <RatingBar
-                    android:id="@+id/priorityRating"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
+                <TextView
+                    android:id="@+id/dueTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:max="5"
-                    android:progressTint="#157ED2"
-                    android:rating="3"
-                    app:layout_constraintBottom_toBottomOf="@+id/mainTask"
+                    android:layout_marginEnd="12dp"
+                    android:fontFamily="@font/timer_font2"
+                    android:text="12-01-2023"
+                    android:textAlignment="textEnd"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/noteParentConstraintLayout"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

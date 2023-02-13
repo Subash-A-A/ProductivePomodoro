@@ -1,12 +1,16 @@
 package com.example.productivepomodoro.Todo;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -16,7 +20,9 @@ import com.example.productivepomodoro.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TodoParent extends Fragment {
     Fragment fragmentToBeDisplayed;
@@ -106,24 +112,32 @@ public class TodoParent extends Fragment {
                 .commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void markAsCompleted(int onGoingPosition, TodoModel todoModel){
         String taskName = todoModel.getMainTaskName();
         String taskNote = todoModel.getTasksNote();
         int priority = todoModel.getTaskPriority();
         boolean checked = true;
 
-        todoListCompleted.addTaskToList(new TodoModel(taskName, taskNote, checked, priority));
+        todoListCompleted.addTaskToList(new TodoModel(taskName, taskNote, checked, priority, LocalDateTime.now()));
         todoListOngoing.removeFromList(onGoingPosition);
+
+        Toast.makeText(getContext(), taskName + " marked as Completed!", Toast.LENGTH_SHORT).show();
+        Log.w("Todo", "Task Marked as Completed!");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void markAsOngoing(int completedPosition, TodoModel todoModel){
         String taskName = todoModel.getMainTaskName();
         String taskNote = todoModel.getTasksNote();
         int priority = todoModel.getTaskPriority();
         boolean checked = false;
 
-        todoListOngoing.addTaskToList(new TodoModel(taskName, taskNote, checked, priority));
+        todoListOngoing.addTaskToList(new TodoModel(taskName, taskNote, checked, priority, LocalDateTime.now()));
         todoListCompleted.removeFromList(completedPosition);
+
+        Toast.makeText(getContext(), taskName + " marked as Ongoing!", Toast.LENGTH_SHORT).show();
+        Log.w("Todo", "Task Marked as Ongoing!");
     }
 
     public TodoList getTodoList(boolean getOngoing){

@@ -2,6 +2,7 @@ package com.example.productivepomodoro.Todo;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,9 +25,11 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.example.productivepomodoro.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Locale;
 
 public class TodoList extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -93,7 +97,6 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
             }
         });
 
-//        return (todoModels.isEmpty()) ? emptyTaskView:todoView;
         return todoView;
     }
 
@@ -130,16 +133,19 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
         }
     };
 
-    public void addTask(String taskName, String taskNote, int priority){
-        TodoModel newModel = new TodoModel(taskName, taskNote, false, priority);
+    public void addTask(String taskName, String taskNote, int priority, LocalDateTime due){
+        TodoModel newModel = new TodoModel(taskName, taskNote, false, priority, due);
         todoModels.add(0, newModel);
         adapter.notifyItemInserted(0);
+
+        Toast.makeText(getContext(), "Task Added!", Toast.LENGTH_SHORT).show();
     }
 
     public void deleteTask(int viewPosition){
         deletedModelInStack = todoModels.get(viewPosition);
         removeFromList(viewPosition);
         undoSnackBar(deletedModelInStack.getMainTaskName() + " was Deleted", viewPosition);
+        Log.w("Todo", "Task Deleted!");
     }
 
     public void undoSnackBar(String message, int viewPosition){
@@ -167,31 +173,40 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
 
         todoModels.remove(position);
         adapter.notifyItemRemoved(position);
-
         adapter.getTodoModelsFull().remove(todoToBeRemoved);
     }
     public void replaceTodo(int position, TodoModel model){
         removeFromList(position);
         addTaskToList(model, position);
+        Toast.makeText(getContext(),"Task Edited!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long l) {
         spinnerSelection = pos;
         switch (pos){
+            case 0:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    todoModels.sort(new SortByDateOfCreation());
+                }
+                break;
+            case 1:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    todoModels.sort(new SortByDueDate());
+                }
+                break;
             case 2:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     todoModels.sort(new SortByName());
-                    adapter.notifyDataSetChanged();
                 }
                 break;
             case 3:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     todoModels.sort(new SortByPriority());
-                    adapter.notifyDataSetChanged();
                 }
                 break;
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -216,6 +231,23 @@ public class TodoList extends Fragment implements AdapterView.OnItemSelectedList
         @Override
         public int compare(TodoModel t1, TodoModel t2) {
             return t2.getTaskPriority() - t1.getTaskPriority();
+        }
+    }
+    static class SortByDateOfCreation implements Comparator<TodoModel> {
+        @Override
+        public int compare(TodoModel t1, TodoModel t2) {
+            Date d1 = t1.getDateOfCreation();
+            Date d2 = t2.getDateOfCreation();
+            return d1.compareTo(d2);
+        }
+    }
+    static class SortByDueDate implements Comparator<TodoModel> {
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        @Override
+        public int compare(TodoModel t1, TodoModel t2) {
+            LocalDateTime d1 = t1.getDueDate();
+            LocalDateTime d2 = t2.getDueDate();
+            return d1.compareTo(d2);
         }
     }
 }

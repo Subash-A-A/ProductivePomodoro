@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:background">@color/primary_dark_nav_bg</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">?attr/colorPrimaryVariant</item>
+        <item name="android:textColorPrimary">?attr/colorOnPrimary</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
     </style>
 
+    <style name="DateTheme" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">@color/teal_200</item>                   <!--header background-->
+        <item name="android:windowBackground">?attr/colorPrimaryVariant</item>     <!--calendar background-->
+<!--        <item name="android:colorControlActivated">@color/teal_200</item> &lt;!&ndash;selected day&ndash;&gt;-->
+<!--        <item name="android:textColorPrimary">?attr/colorOnPrimary</item> &lt;!&ndash;days of the month&ndash;&gt;-->
+<!--        <item name="android:textColorSecondary">?attr/colorOnSecondary</item>    &lt;!&ndash;days of the week&ndash;&gt;-->
+        <item name="android:buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 </resources>
